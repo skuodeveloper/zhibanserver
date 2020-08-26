@@ -15,7 +15,8 @@ import java.util.Locale;
 @Component
 @EnableScheduling
 public class ScheduledConfig {
-    @Scheduled(cron = "0 0 9 * * ?")
+@Scheduled(cron = "0 0 9 * * ?")
+//@Scheduled(fixedDelay = 10)
     public void schedule_1() {
         Date date = new Date();
         String date_time = new SimpleDateFormat("yyyy-MM-dd", Locale.CHINA).format(date);
@@ -27,8 +28,8 @@ public class ScheduledConfig {
 
             request.setMsgtype("link");
             OapiRobotSendRequest.Link link = new OapiRobotSendRequest.Link();
-            link.setMessageUrl("http://60.190.149.52:8012/");
-            link.setPicUrl("http://60.190.149.52:80/html/zhiban.jpg");
+            link.setMessageUrl("http://abcdef.vaiwan.com/zhiban/index.html");
+            link.setPicUrl("http://abcdef.vaiwan.com/zhiban/img/值班.png");
             link.setTitle("值班表");
             link.setText(title);
             request.setLink(link);

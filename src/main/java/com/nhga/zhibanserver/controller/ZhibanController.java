@@ -6,6 +6,7 @@ import com.dingtalk.api.DingTalkClient;
 import com.dingtalk.api.request.OapiRobotSendRequest;
 import com.dingtalk.api.response.OapiRobotSendResponse;
 import com.nhga.zhibanserver.entity.Zhiban;
+import com.nhga.zhibanserver.mapper.ZhibanMapper;
 import com.nhga.zhibanserver.service.IZhibanService;
 import net.sf.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -14,6 +15,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import javax.annotation.Resource;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
@@ -21,8 +23,8 @@ import java.util.Locale;
 
 @RestController
 public class ZhibanController {
-    @Autowired
-    private IZhibanService zhibanSvc;
+    @Resource
+    private ZhibanMapper zhibanSvc;
 
     @CrossOrigin
     @RequestMapping("zhiban/add")
@@ -34,7 +36,7 @@ public class ZhibanController {
             Zhiban zhiban = new Zhiban();
             zhiban.setContent(content);
             zhiban.setIntime(new Date());
-            zhibanSvc.save(zhiban);
+            zhibanSvc.updZhiban(zhiban);
         } catch (Exception ex) {
             System.out.println(date_time + "保存数据库error：" + ex.getMessage());
             saveAgain(content);
@@ -49,8 +51,7 @@ public class ZhibanController {
         try {
             Zhiban zhiban = new Zhiban();
             zhiban.setContent(content);
-            zhiban.setIntime(new Date());
-            zhibanSvc.save(zhiban);
+            zhibanSvc.addZhiban(zhiban);
 
             System.out.println("再次保存数据库成功!");
         } catch (Exception ex) {
@@ -62,8 +63,9 @@ public class ZhibanController {
     @RequestMapping("zhiban/get")
     public String get() {
         try {
-            List<Zhiban> zhibanList = zhibanSvc.list(new QueryWrapper<Zhiban>()
-                    .apply("date(intime) = curdate()"));
+//            List<Zhiban> zhibanList = zhibanSvc.selectList(new QueryWrapper<Zhiban>()
+//                    .apply("date(intime) = curdate()"));
+            List<Zhiban> zhibanList = zhibanSvc.getZhiban();
 
             return zhibanList.get(0).getContent();
         } catch (Exception ex) {

@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html>
+
+	<head>
+		<meta charset="UTF-8">
+		<meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no" />
+		<meta name="apple-mobile-web-app-capable" content="yes">
+		<meta name="apple-mobile-web-app-status-bar-style" content="black">
+		<link href="css/mui.min.css" rel="stylesheet" />
+		<style type="text/css">
+			.self-cell1 {
+				width: 49%;
+				line-height: 25px;
+				display: inline-block;
+				text-align: center;
+			}
+			
+			.self-cell2 {
+				width: 24%;
+				line-height: 25px;
+				display: inline-block;
+				text-align: center;
+			}
+			
+			.self-cell3 {
+				width: 24%;
+				line-height: 25px;
+				display: inline-block;
+				text-align: center;
+			}
+		</style>
+	</head>
+
+	<body>
+		<header class="mui-bar mui-bar-nav" id="header">
+			<h1 class="mui-title">{{title}}</h1>
+		</header>
+
+		<div class="mui-content" id="news">
+			<div id="slider" class="mui-slider mui-fullscreen">
+				<div class="mui-slider-group">
+					<div id="item1mobile" class="mui-slider-item mui-control-content mui-active">
+						<div id="list" class="mui-content mui-scroll-wrapper">
+							<div class="mui-scroll">
+								<ul class="mui-table-view">
+									<li class="mui-table-view-cell  mui-media" v-for="item in items">
+										<template>
+											<div>
+												<div class="self-cell1">{{item.deptname}}</div>
+												<div class="self-cell2">{{item.username}}</div>
+												<div class="self-cell3">{{item.shortmobile}}</div>
+											</div>
+										</template>
+									</li>
+								</ul>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+		<script src="js/mui.min.js "></script>
+		<script src="js/jquery.min.js"></script>
+		<script src="js/vue.min.js" type="text/javascript" charset="utf-8"></script>
+		<script type="text/javascript">
+			
+			var title = getTitle() + "值班表";
+			var header = new Vue({
+				el: '#header',
+				data: {
+					title: title //列表信息流数据
+				}
+			});
+
+			var news = new Vue({
+				el: '#news',
+				data: {
+					items: [] //列表信息流数据
+				}
+			});
+
+			(function($) {
+				$('.mui-scroll-wrapper').scroll({
+					indicators: true //是否显示滚动条
+				});
+			})(mui);
+
+			getZhiBan();
+
+			function getZhiBan() {
+				$.ajax({
+					type: "get",
+					// url: "http://60.190.149.52:8011/zhiban/get",
+                    url: "http://abcdef.vaiwan.com/zhiban/get",
+					dataType: "text",
+					success: function(result) {
+						news.items = JSON.parse(result);
+					},
+					error: function(XMLHttpRequest, textStatus, errorThrown) {
+						//通常情况下textStatus和errorThrown只有其中一个包含信息
+						console.log(textStatus);
+						this; //调用本次ajax请求时传递的options参数  
+					}
+				});
+			}
+
+			function getTitle() {
+				var date = new Date();
+				var year = date.getFullYear();
+				var month = date.getMonth() + 1;
+				var day = date.getDate();
+				if(month < 10) {
+					month = "0" + month;
+				}
+				if(day < 10) {
+					day = "0" + day;
+				}
+				
+				return nowDate = year + "-" + month + "-" + day;
+			}
+		</script>
+	</body>
+</html>

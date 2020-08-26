@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.nhga.zhibanserver.mapper.ZhibanMapper">
+    <insert id="addZhiban" parameterType="com.nhga.zhibanserver.entity.Zhiban">
+        INSERT INTO Zhiban
+        ( content )
+        VALUES(
+        hex(AES_ENCRYPT(#{content}, '95352362a9d342ae80043298989ff442')))
+    </insert>
+
+    <update id="updZhiban" parameterType="com.nhga.zhibanserver.entity.Zhiban">
+        UPDATE Zhiban
+        SET content = hex(AES_ENCRYPT(#{content}, '95352362a9d342ae80043298989ff442')),
+            intime = #{intime}
+    </update>
+
+    <select id="getZhiban" resultType="com.nhga.zhibanserver.entity.Zhiban">
+        SELECT id, CONVERT(AES_DECRYPT(unhex(content),'95352362a9d342ae80043298989ff442') using utf8) content, intime
+        FROM Zhiban
+        WHERE date(intime) = curdate()
+    </select>
+</mapper>
